@@ -1,0 +1,3 @@
+---
+- name: install rsyslog
+  yum: name=rsyslog state=present

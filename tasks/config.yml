@@ -1,0 +1,15 @@
+---
+- name: get log directory list
+  stat: path={{ ('/').join(item.path.split('/')[0:-1]) }}
+  with_items: "{{ rsyslog | default([]) }}"
+  register: dir
+
+- name: check if log directory exists
+  fail: msg="{{ item.invocation.module_args }} doesn't exist"
+  with_items: "{{ dir.results | default([]) }}"
+  when: item.stat.exists == false
+
+- name: copy rsyslog conf to /etc/rsyslog.d
+  template: src=rsyslog.conf.j2 dest=/etc/rsyslog.d/{{ item.name }}
+  with_items: "{{ rsyslog | default([]) }}"
+  notify: restart rsyslogd

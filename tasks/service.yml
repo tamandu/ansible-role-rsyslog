@@ -1,0 +1,3 @@
+---
+- name: enable & start rsyslogd
+  service: name=rsyslogd enabled=yes state=started
